@@ -8,6 +8,7 @@ import MainContent from './components/MainContent';
 import Footer from './components/Footer';
 import React from 'react';
 import UserProfile from './components/UserProfile'
+import Counter from './components/Counter';
 
 
 
@@ -48,6 +49,11 @@ function App() {
 
       <div>
             <UserProfile name="Alice" age="25" bio="Loves hiking and photography" />
+      </div>
+
+      <div>
+        <h1> Welcome to the Counter App</h1>
+        <Counter />
       </div>
 
       <p className="read-the-docs">
