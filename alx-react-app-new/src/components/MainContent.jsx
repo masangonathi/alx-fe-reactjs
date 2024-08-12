@@ -1,8 +1,8 @@
 function MainContent() {
     return (
         <div>
-            <main>
-                <p style={{ backgroundColor: '#2cb67d'}}>I love to visit New York, Paris, and Tokyo.</p>
+            <main style={{ backgroundColor: '#2cb67d'}}>
+                <p style={{ color: 'black'}}>I love to visit New York, Paris, and Tokyo.</p>
             </main>
         </div>
     );

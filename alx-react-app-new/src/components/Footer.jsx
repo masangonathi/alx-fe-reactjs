@@ -1,7 +1,7 @@
 function Footer() {
     return (
         <div>
-            <footer>
+            <footer style={{color: 'red'}}>
             <p style={{fontStyle: "italic"}}>© 2023 City Lovers</p>
             </footer>
         </div>
