@@ -4,9 +4,9 @@ import UserContext from './UserContext';
 function UserDetails() {
   const userData = useContext(UserContext);
 
-  if (!userData) {
-    return <div>No user data availabe</div>
-  }
+//   if (!userData) {
+//     return <div>No user data availabe</div>
+//   }
 
   return (
     <div>
