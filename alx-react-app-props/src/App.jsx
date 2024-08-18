@@ -9,7 +9,7 @@ import Footer from './components/Footer';
 import React from 'react';
 import UserProfile from './components/UserProfile';
 import ProfilePage from './ProfilePage';
-import UserContext from './UserContext';
+import UserContext from './Context/UserContext';
 
 
 
@@ -55,7 +55,6 @@ function App() {
       <UserContext.Provider value={userData}>
         <ProfilePage />
         </UserContext.Provider>
-
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
