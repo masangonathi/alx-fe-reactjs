@@ -12,8 +12,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "test": "jest"
-  },
+  "test": "react-scripts test"
+},
   "eslintConfig": {
     "extends": [
       "react-app",
