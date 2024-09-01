@@ -16,9 +16,7 @@ const RegistrationForm = () => {
 
     if (!email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid';
-    }
+    } 
 
     if (!password.trim()) {
       newErrors.password = 'Password is required';
