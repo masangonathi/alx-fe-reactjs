@@ -1,29 +1,30 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Profile from './components/Profile';
 import ProfileDetails from './components/ProfileDetails';
 import ProfileSettings from './components/ProfileSettings';
 import BlogPost from './components/BlogPost';
 import Login from './components/Login';
-import { useAuth } from './auth';  // Assuming you have an auth hook or context
-
-function ProtectedRoute({ element: Component, ...rest }) {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <Component {...rest} /> : <Navigate to="/login" />;
-}
+import ProtectedRoute from './components/ProtectedRoute';
+import { useAuth } from './auth'; // Assuming you have an auth hook or context
 
 function App() {
+  const { isAuthenticated } = useAuth(); // Authentication state is checked here
+
   return (
     <Router>
       <Routes>
-        {/* Basic Route */}
         <Route path="/" element={<Home />} />
         
-        {/* Protected Route Example */}
+        {/* Protected Route with passed isAuthenticated prop */}
         <Route 
           path="/profile/*" 
-          element={<ProtectedRoute element={Profile} />}
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Profile />
+            </ProtectedRoute>
+          }
         >
           {/* Nested Routes within Profile */}
           <Route path="details" element={<ProfileDetails />} />
