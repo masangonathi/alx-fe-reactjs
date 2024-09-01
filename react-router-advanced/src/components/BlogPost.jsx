@@ -1,15 +1,15 @@
-// src/components/BlogPost.jsx
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-const BlogPost = () => {
+function BlogPost() {
   const { id } = useParams();
+
   return (
     <div>
-      <h2>Blog Post {id}</h2>
-      <p>This is the content of the blog post with ID: {id}</p>
+      <h1>Blog Post {id}</h1>
+      {/* Fetch and display the blog post based on the id */}
     </div>
   );
-};
+}
 
 export default BlogPost;
