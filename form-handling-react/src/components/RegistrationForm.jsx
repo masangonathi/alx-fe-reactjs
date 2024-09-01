@@ -1,4 +1,3 @@
-// src/components/RegistrationForm.jsx
 import React, { useState } from 'react';
 
 const RegistrationForm = () => {
@@ -7,36 +6,21 @@ const RegistrationForm = () => {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
 
-  const validate = () => {
-    const newErrors = {};
-
-    if (!username) {
-      newErrors.username = 'Username is required';
-    }
-
-    if (!email) {
-      newErrors.email = 'Email is required';
-    } 
-
-    if (!password) {
-      newErrors.password = 'Password is required';
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    return newErrors;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+    // Basic validation
+    const newErrors = {};
+    if (!username) newErrors.username = 'Username is required';
+    if (!email) newErrors.email = 'Email is required';
+    if (!password) newErrors.password = 'Password is required';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
     } else {
       setErrors({});
-      // Proceed with form submission logic
-      console.log('Form submitted successfully', { username, email, password });
+      // Simulate form submission (e.g., API call)
+      console.log('Form submitted:', { username, email, password });
     }
   };
 
