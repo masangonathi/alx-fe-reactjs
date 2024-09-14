@@ -1,20 +1,37 @@
 import { useState } from 'react';
 
 function AddRecipeForm({ onAddRecipe }) {
+  // Form state
   const [title, setTitle] = useState('');
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
-  const [error, setError] = useState('');
+  
+  // Error state to handle validation errors
+  const [errors, setErrors] = useState({});
+
+  // Validation function
+  const validate = () => {
+    let tempErrors = {};
+    
+    if (!title) tempErrors.title = "Title is required";
+    if (!ingredients) tempErrors.ingredients = "Ingredients are required";
+    if (ingredients && ingredients.split(',').length < 2) tempErrors.ingredients = "At least 2 ingredients are required";
+    if (!instructions) tempErrors.instructions = "Instructions are required";
+    if (instructions && instructions.split('.').length < 2) tempErrors.instructions = "At least 2 steps are required";
+    
+    setErrors(tempErrors);
+
+    // If the object is empty, validation passed
+    return Object.keys(tempErrors).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simple validation
-    if (!title || !ingredients || !instructions) {
-      setError('Please fill out all fields.');
-      return;
-    }
 
-    // Format ingredients and instructions as arrays
+    // Validate the form
+    if (!validate()) return;
+
+    // If validation passes, proceed to format the data
     const formattedIngredients = ingredients.split(',').map(item => item.trim());
     const formattedInstructions = instructions.split('.').map(step => step.trim());
 
@@ -26,20 +43,24 @@ function AddRecipeForm({ onAddRecipe }) {
       summary: "Newly added recipe"
     };
 
+    // Pass the new recipe to the parent component
     onAddRecipe(newRecipe);
 
-    // Clear the form
+    // Clear the form fields after submission
     setTitle('');
     setIngredients('');
     setInstructions('');
-    setError('');
+    setErrors({});
   };
 
   return (
     <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md mt-6">
       <h2 className="text-2xl font-bold mb-4">Add a New Recipe</h2>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {/* Display form validation errors */}
+      {errors.title && <p className="text-red-500 mb-4">{errors.title}</p>}
+      {errors.ingredients && <p className="text-red-500 mb-4">{errors.ingredients}</p>}
+      {errors.instructions && <p className="text-red-500 mb-4">{errors.instructions}</p>}
 
       <div className="mb-4">
         <label htmlFor="title" className="block text-lg font-semibold">Recipe Title</label>
