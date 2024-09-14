@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import recipesData from '../data.json';
+import AddRecipeForm from './AddRecipeForm';
 
-const HomePage = () => {
-  const [recipes, setRecipes] = useState([]);
+function HomePage() {
+    const [recipes, setRecipes] = useState(recipeData);
 
-  useEffect(() => {
-    // Simulate fetching data
-    setRecipes(recipesData);
-  }, []);
+    const handleAddRecipe = (newRecipe) => {
+        setRecipes([...recipes, newRecipe]);
+      };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold text-center mb-8">Recipe Sharing Platform</h1>
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-6">Recipe Sharing Platform</h1>
+
+      <AddRecipeForm onAddRecipe={handleAddRecipe} />
+
       <div className="grid md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {recipes.map(recipe => (
           <div key={recipe.id} className="bg-white rounded-lg shadow-lg p-4 hover:shadow-xl transition-shadow duration-300">
