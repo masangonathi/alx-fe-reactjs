@@ -1,7 +1,7 @@
 // src/services/githubService.js
 import axios from 'axios';
 
-const SEARCH_API_URL = 'https://api.github.com/search/users';
+const SEARCH_API_URL = 'https://api.github.com/search/users?q';
 
 const fetchAdvancedUserData = async ({ username, location, minRepos, page = 1 }) => {
   let query = '';
