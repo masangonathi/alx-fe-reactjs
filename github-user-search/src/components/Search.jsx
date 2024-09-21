@@ -1,3 +1,4 @@
+// src/components/Search.jsx
 import { useState } from 'react';
 import fetchAdvancedUserData from '../services/githubService';
 
@@ -8,6 +9,8 @@ function Search() {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,15 +23,19 @@ function Search() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setUserData([]);
+    setPage(1);
 
     try {
       const query = {
         username,
         location,
         minRepos,
+        page: 1,
       };
       const data = await fetchAdvancedUserData(query);
-      setUserData(data.items); // GitHub API returns search results in 'items'
+      setUserData(data.items);
+      setHasMore(data.total_count > data.items.length);
     } catch (err) {
       setError('No users found matching the criteria.');
     } finally {
@@ -36,59 +43,98 @@ function Search() {
     }
   };
 
+  const handleLoadMore = async () => {
+    const nextPage = page + 1;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const query = {
+        username,
+        location,
+        minRepos,
+        page: nextPage,
+      };
+      const data = await fetchAdvancedUserData(query);
+      setUserData((prevData) => [...prevData, ...data.items]);
+      setPage(nextPage);
+      setHasMore(data.total_count > (page * 30) + data.items.length);
+    } catch (err) {
+      setError('Failed to load more users.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center">
-      <form onSubmit={handleSubmit} className="mb-4 flex flex-col items-center space-y-4">
-        <input
-          type="text"
-          name="username"
-          value={username}
-          onChange={handleInputChange}
-          placeholder="Username"
-          className="border p-2 rounded"
-        />
-        <input
-          type="text"
-          name="location"
-          value={location}
-          onChange={handleInputChange}
-          placeholder="Location"
-          className="border p-2 rounded"
-        />
-        <input
-          type="number"
-          name="minRepos"
-          value={minRepos}
-          onChange={handleInputChange}
-          placeholder="Min Repositories"
-          className="border p-2 rounded"
-        />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+      <form onSubmit={handleSubmit} className="mb-6 w-full max-w-lg">
+        <div className="flex flex-col sm:flex-row sm:space-x-4">
+          <input
+            type="text"
+            name="username"
+            value={username}
+            onChange={handleInputChange}
+            placeholder="Username"
+            className="border border-gray-300 rounded-lg p-2 mb-4 sm:mb-0 flex-1"
+          />
+          <input
+            type="text"
+            name="location"
+            value={location}
+            onChange={handleInputChange}
+            placeholder="Location"
+            className="border border-gray-300 rounded-lg p-2 mb-4 sm:mb-0 flex-1"
+          />
+          <input
+            type="number"
+            name="minRepos"
+            value={minRepos}
+            onChange={handleInputChange}
+            placeholder="Min Repositories"
+            className="border border-gray-300 rounded-lg p-2 mb-4 sm:mb-0 flex-1"
+            min="0"
+          />
+        </div>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-300 mt-4"
+        >
           Search
         </button>
       </form>
 
       {loading && <p>Loading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+
       {userData && userData.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
           {userData.map((user) => (
-            <div key={user.id} className="border p-4 rounded shadow">
+            <div key={user.id} className="border p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
               <img src={user.avatar_url} alt={user.login} className="w-24 h-24 rounded-full mx-auto" />
-              <h2 className="text-xl font-bold mt-2 text-center">{user.login}</h2>
+              <h2 className="text-xl font-bold text-center mt-2">{user.name || user.login}</h2>
               {user.location && <p className="text-center text-gray-600">Location: {user.location}</p>}
               <p className="text-center">Repos: {user.public_repos}</p>
               <a
                 href={user.html_url}
                 target="_blank"
                 rel="noreferrer"
-                className="text-blue-500 block text-center"
+                className="text-blue-500 block text-center mt-2"
               >
                 Visit GitHub Profile
               </a>
             </div>
           ))}
         </div>
+      )}
+
+      {hasMore && (
+        <button
+          onClick={handleLoadMore}
+          className="mt-6 bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition-colors duration-300"
+        >
+          Load More
+        </button>
       )}
     </div>
   );
