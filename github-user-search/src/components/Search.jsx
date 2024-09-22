@@ -38,9 +38,15 @@ function Search() {
       setUserData(data.items);
       setHasMore(data.total_count > data.items.length);
     } catch (err) {
-      setError('No users found matching the criteria.');
-    } finally {
-      setLoading(false);
+        if (err.response && err.response.status === 404) {
+          setError('User not found. Please try a different username.');
+        } else if (err.response && err.response.status === 403) {
+          setError('API rate limit exceeded. Please try again later.');
+        } else {
+          setError('An unexpected error occurred. Please try again.');
+        }
+      } finally {
+        setLoading(false);
     }
   };
 
